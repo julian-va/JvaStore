@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -12,6 +13,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,35 +22,47 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import jva.cloud.jvastore.domain.model.Product
+import jva.cloud.jvastore.presentation.common.MyAsyncImage
 import jva.cloud.jvastore.presentation.common.MyOutlinedTextField
 import jva.cloud.jvastore.presentation.common.TextValueCard
 import jva.cloud.jvastore.presentation.viewmodel.StoreViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreView(
     navigateToStoreDetail: (String) -> Unit,
     storeViewModel: StoreViewModel = hiltViewModel()
 ): Unit {
-    Scaffold(topBar = {
-        MyTopAppBar()
-    }) { paddingValues ->
+    val state = storeViewModel.state.value
+    val pinnedScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    Scaffold(
+        modifier = Modifier.nestedScroll(pinnedScrollBehavior.nestedScrollConnection),
+        topBar = {
+            MyTopAppBar(
+                pinnedScrollBehavior = pinnedScrollBehavior,
+                cartQuantity = state.cartQuantity.toString()
+            )
+        }) { paddingValues ->
 
         MyTextFieldSearch(
             modifier = Modifier.padding(paddingValues),
-            searchKey = storeViewModel.state.value.keySearchProduct,
+            searchKey = state.keySearchProduct,
             updateKey = { storeViewModel.searchFilterProducts(it) },
         )
 
         MyBody(
             modifier = Modifier.padding(paddingValues),
-            products = storeViewModel.state.value.products,
+            products = state.products,
             reprocessImage = { storeViewModel.reprocessImage(it) },
             storeDetail = { navigateToStoreDetail(it) }
         )
@@ -56,12 +71,29 @@ fun StoreView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MyTopAppBar(): Unit {
+private fun MyTopAppBar(pinnedScrollBehavior: TopAppBarScrollBehavior, cartQuantity: String): Unit {
     TopAppBar(title = {
         Text(text = "JVA STORE")
-    }, actions = {
-        Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "")
-    })
+    },
+        scrollBehavior = pinnedScrollBehavior,
+        actions = {
+            BadgedBox(modifier = Modifier.padding(10.dp), badge = {
+                Badge(
+                    containerColor = Color.Blue,
+                    contentColor = Color.Gray,
+                    content = { Text(text = cartQuantity) }
+                )
+            }
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(40.dp),
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = ""
+                )
+            }
+        })
 }
 
 @Composable
@@ -115,10 +147,7 @@ private fun ProductCard(
             .padding(5.dp)
             .clickable { goToStoreDetail(product.id.toString()) }
     ) {
-        AsyncImage(
-            model = image,
-            contentDescription = ""
-        )
+        MyAsyncImage(imagePath = image, modifier = Modifier)
         TextValueCard(textHeader = "product name", text = product.title)
         TextValueCard(textHeader = "price", text = product.price.toString())
         TextValueCard(textHeader = "description", text = product.description)
