@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
-import jva.cloud.jvastore.domain.usecase.GetAllProducts
+import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
 import jva.cloud.jvastore.presentation.viewmodel.state.StoreViewModelState
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class StoreViewModel @Inject constructor(private val getAllProducts: GetAllProducts) : ViewModel() {
+class StoreViewModel @Inject constructor(
+    private val retrieveProductsFromLocal: RetrieveProductsFromLocal
+) : ViewModel() {
     private val _state = mutableStateOf(StoreViewModelState())
     val state = _state
 
@@ -30,9 +32,16 @@ class StoreViewModel @Inject constructor(private val getAllProducts: GetAllProdu
             _state.value.copy(theViewmodelWasAlreadyCalled = BOOLEAN_TRUE)
     }
 
-    private suspend fun getAllProducts(): Unit {
-        val products = getAllProducts.getAll()
-        _state.value = _state.value.copy(products = products, rememberList = products)
+    private suspend fun getAllProducts() {
+        retrieveProductsFromLocal.getAllProducts().collect { products ->
+            val quantityOfSelectedProducts =
+                products.filter { product -> BOOLEAN_TRUE == product.selected }.size
+            _state.value = _state.value.copy(
+                products = products,
+                rememberList = products,
+                cartQuantity = quantityOfSelectedProducts
+            )
+        }
     }
 
     fun reprocessImage(listImage: List<String>): String {

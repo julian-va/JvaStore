@@ -24,8 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import jva.cloud.jvastore.domain.model.Product
+import jva.cloud.jvastore.presentation.common.MyAsyncImage
 import jva.cloud.jvastore.presentation.common.MyOutlinedTextField
 import jva.cloud.jvastore.presentation.common.TextValueCard
 import jva.cloud.jvastore.presentation.viewmodel.DetailStoreViewModel
@@ -105,12 +105,10 @@ private fun ProductCard(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                .height(550.dp)
+                .height(600.dp)
         ) {
-            AsyncImage(
-                model = image,
-                contentDescription = "",
-                modifier = Modifier
+            MyAsyncImage(
+                imagePath = image, modifier = Modifier
                     .height(300.dp)
                     .fillMaxWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
@@ -119,6 +117,7 @@ private fun ProductCard(
             TextValueCard(textHeader = "price", text = product.price.toString())
             TextValueCard(textHeader = "description", text = product.description)
             TextValueCard(textHeader = "category", text = product.category.name)
+            TextValueCard(textHeader = "amount", text = product.selectedQuantity.toString())
             MyButton(
                 quantity = quantity,
                 product = product,
@@ -137,7 +136,7 @@ private fun MyButton(
     addCar: (product: Product) -> Unit
 ) {
 
-    val ss = if (quantity == ConstantApp.ZERO_STR) STRING_EMPTY else quantity
+    val ss = if (quantity == ConstantApp.ZERO_STR || quantity.isBlank()) STRING_EMPTY else quantity
     MyOutlinedTextField(
         fieldName = "Add product",
         text = ss,

@@ -2,6 +2,7 @@ package jva.cloud.jvastore.domain.model
 
 import jva.cloud.jvastore.data.local.entity.ProductsEntity
 import jva.cloud.jvastore.data.remote.respose.ProductsResponse
+import jva.cloud.jvastore.util.ConstantApp
 
 data class Product(
     val category: Category,
@@ -11,7 +12,9 @@ data class Product(
     val images: List<String>,
     val price: Int,
     val title: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val selected: Boolean = ConstantApp.BOOLEAN_FALSE,
+    val selectedQuantity: Int = ConstantApp.ZERO,
 )
 
 fun productsResponseToProduct(response: ProductsResponse): Product {
@@ -52,7 +55,9 @@ fun productToProductsEntity(model: Product): ProductsEntity {
         images = model.images,
         categoryId = model.category.id,
         updatedAt = model.updatedAt,
-        description = model.description
+        description = model.description,
+        selectedQuantity = model.selectedQuantity,
+        selected = model.selected
     )
 }
 
@@ -65,6 +70,8 @@ fun productsEntityToProduct(entity: ProductsEntity, entityCategory: Category): P
         images = entity.images,
         category = entityCategory,
         updatedAt = entity.updatedAt,
-        description = entity.description
+        description = entity.description,
+        selected = entity.selected,
+        selectedQuantity = entity.selectedQuantity
     )
 }

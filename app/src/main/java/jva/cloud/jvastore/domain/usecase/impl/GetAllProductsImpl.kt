@@ -19,6 +19,13 @@ class GetAllProductsImpl @Inject constructor(
 ) :
     GetAllProducts {
     override suspend fun getAll(): List<Product> {
+
+        val listProduct: List<Product> = (1..10).map { _ -> getProductionApi() }.flatten()
+        saveResponseToDataBase(listProduct = listProduct)
+        return listProduct
+    }
+
+    private suspend fun getProductionApi(): List<Product> {
         var listProduct: List<Product> = listOf()
         try {
             val response = productsRepository.getAllProducts()
@@ -27,10 +34,8 @@ class GetAllProductsImpl @Inject constructor(
                     ?.let { productsResponses ->
                         listProduct =
                             listProductsResponseToListProduct(responses = productsResponses)
-                        saveResponseToDataBase(listProduct = listProduct)
                     }
             }
-
         } catch (ex: Exception) {
             println("failed to users recovered to the server, the error is: ${ex.message}")
         }

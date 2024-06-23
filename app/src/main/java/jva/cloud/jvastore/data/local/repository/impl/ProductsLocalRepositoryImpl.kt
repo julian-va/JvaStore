@@ -3,11 +3,12 @@ package jva.cloud.jvastore.data.local.repository.impl
 import jva.cloud.jvastore.data.local.dao.ProductsDao
 import jva.cloud.jvastore.data.local.entity.ProductsEntity
 import jva.cloud.jvastore.data.local.repository.ProductsLocalRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProductsLocalRepositoryImpl @Inject constructor(private val productsDao: ProductsDao) :
     ProductsLocalRepository {
-    override suspend fun getAll(): List<ProductsEntity> {
+    override fun getAll(): Flow<List<ProductsEntity>> {
         return productsDao.getAll()
     }
 
