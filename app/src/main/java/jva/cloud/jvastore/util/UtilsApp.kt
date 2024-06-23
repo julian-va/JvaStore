@@ -8,6 +8,7 @@ object UtilsApp {
         images.firstOrNull()?.let { image ->
             finalImageStr = image.replace(oldValue = "[\"", newValue = "")
                 .replace(oldValue = "\"]", newValue = "")
+                .replace(oldValue = "\"", newValue = "")
         }
         return finalImageStr
     }

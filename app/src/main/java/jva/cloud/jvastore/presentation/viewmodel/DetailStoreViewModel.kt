@@ -9,8 +9,6 @@ import jva.cloud.jvastore.domain.usecase.RetrieveProductFromLocalById
 import jva.cloud.jvastore.domain.usecase.SaveProductsLocal
 import jva.cloud.jvastore.presentation.viewmodel.state.DetailStoreViewModelState
 import jva.cloud.jvastore.util.ConstantApp
-import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
-import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
 import jva.cloud.jvastore.util.ConstantApp.ZERO
 import jva.cloud.jvastore.util.ConstantApp.ZERO_STR
 import jva.cloud.jvastore.util.UtilsApp.reprocessImageFromApi
@@ -57,7 +55,7 @@ class DetailStoreViewModel @Inject constructor(
     fun addToCart(product: Product) {
         viewModelScope.launch(context = Dispatchers.IO) {
             val productDrafter = product.copy(
-                selected = if (product.selectedQuantity > ZERO) BOOLEAN_TRUE else BOOLEAN_FALSE,
+                selected = state.value.selectedQuantity > ZERO,
                 selectedQuantity = state.value.selectedQuantity
             )
             saveProductsLocal.saveAll(products = listOf(productDrafter))

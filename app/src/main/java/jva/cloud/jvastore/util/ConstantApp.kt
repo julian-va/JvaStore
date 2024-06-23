@@ -8,5 +8,6 @@ object ConstantApp {
     const val BOOLEAN_FALSE: Boolean = false
     const val STRING_EMPTY: String = ""
     const val ZERO: Int = 0
+    const val ONE: Int = 1
     const val ZERO_STR: String = "0"
 }

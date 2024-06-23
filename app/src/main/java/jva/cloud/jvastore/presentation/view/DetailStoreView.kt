@@ -105,13 +105,13 @@ private fun ProductCard(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                .height(600.dp)
+                .height(700.dp)
         ) {
             MyAsyncImage(
                 imagePath = image, modifier = Modifier
-                    .height(300.dp)
+                    .height(400.dp)
                     .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
+                    .padding(top = 20.dp, bottom = 20.dp, end = 10.dp, start = 10.dp)
             )
             TextValueCard(textHeader = "product name", text = product.title)
             TextValueCard(textHeader = "price", text = product.price.toString())
