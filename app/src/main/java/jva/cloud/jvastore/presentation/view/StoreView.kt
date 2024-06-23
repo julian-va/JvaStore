@@ -1,7 +1,10 @@
 package jva.cloud.jvastore.presentation.view
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,20 +14,25 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -64,7 +72,9 @@ fun StoreView(
             modifier = Modifier.padding(paddingValues),
             products = state.products,
             reprocessImage = { storeViewModel.reprocessImage(it) },
-            storeDetail = { navigateToStoreDetail(it) }
+            storeDetail = { navigateToStoreDetail(it) },
+            addQuantity = { storeViewModel.addQuantity(it) },
+            removeQuantity = { storeViewModel.removeQuantity(it) }
         )
     }
 }
@@ -123,13 +133,17 @@ private fun MyBody(
     products: List<Product>,
     reprocessImage: (listImage: List<String>) -> String,
     storeDetail: (String) -> Unit,
+    addQuantity: (product: Product) -> Unit,
+    removeQuantity: (product: Product) -> Unit
 ): Unit {
     LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = modifier.padding(top = 80.dp)) {
         items(products, key = { product -> product.id }) { product ->
             val imageStr = reprocessImage(product.images)
             ProductCard(product = product,
                 image = imageStr,
-                goToStoreDetail = { storeDetail(it) })
+                goToStoreDetail = { storeDetail(it) },
+                addQuantity = { addQuantity(it) },
+                removeQuantity = { removeQuantity(it) })
         }
     }
 
@@ -139,18 +153,66 @@ private fun MyBody(
 private fun ProductCard(
     product: Product,
     image: String,
-    goToStoreDetail: (String) -> Unit
+    goToStoreDetail: (String) -> Unit,
+    addQuantity: (product: Product) -> Unit,
+    removeQuantity: (product: Product) -> Unit
 ): Unit {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier
-            .padding(5.dp)
+            .padding(8.dp)
             .clickable { goToStoreDetail(product.id.toString()) }
     ) {
-        MyAsyncImage(imagePath = image, modifier = Modifier)
+        MyAsyncImage(
+            imagePath = image, modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth()
+                .padding(12.dp)
+        )
         TextValueCard(textHeader = "product name", text = product.title)
         TextValueCard(textHeader = "price", text = product.price.toString())
         TextValueCard(textHeader = "description", text = product.description)
         TextValueCard(textHeader = "category", text = product.category.name)
+        AddProduct(
+            modifier = Modifier
+                .fillMaxSize(),
+            product = product,
+            addQuantity = { addQuantity(it) },
+            removeQuantity = { removeQuantity(it) }
+        )
+
+    }
+}
+
+@Composable
+fun AddProduct(
+    modifier: Modifier,
+    product: Product,
+    addQuantity: (product: Product) -> Unit,
+    removeQuantity: (product: Product) -> Unit
+) {
+    if (product.selected) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = { removeQuantity(product) }) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "",
+                )
+            }
+
+            Text(text = product.selectedQuantity.toString())
+
+            IconButton(onClick = { addQuantity(product) }) {
+                Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
+            }
+        }
+    } else {
+        Button(modifier = modifier.padding(15.dp), onClick = { addQuantity(product) }) {
+            Text(text = "Add Product")
+        }
     }
 }

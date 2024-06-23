@@ -6,10 +6,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
+import jva.cloud.jvastore.domain.usecase.SaveProductsLocal
 import jva.cloud.jvastore.presentation.viewmodel.state.StoreViewModelState
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
+import jva.cloud.jvastore.util.ConstantApp.ONE
 import jva.cloud.jvastore.util.ConstantApp.STRING_EMPTY
+import jva.cloud.jvastore.util.ConstantApp.ZERO
 import jva.cloud.jvastore.util.UtilsApp.reprocessImageFromApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class StoreViewModel @Inject constructor(
-    private val retrieveProductsFromLocal: RetrieveProductsFromLocal
+    private val retrieveProductsFromLocal: RetrieveProductsFromLocal,
+    private val saveProductsLocal: SaveProductsLocal
 ) : ViewModel() {
     private val _state = mutableStateOf(StoreViewModelState())
     val state = _state
@@ -75,5 +79,21 @@ class StoreViewModel @Inject constructor(
             _state.value = _state.value.copy(products = list)
         }
 
+    }
+
+    fun addQuantity(product: Product) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            val quantity = product.selectedQuantity + ONE
+            val productDraft = product.copy(selectedQuantity = quantity, selected = quantity > ZERO)
+            saveProductsLocal.saveAll(products = listOf(productDraft))
+        }
+    }
+
+    fun removeQuantity(product: Product) {
+        viewModelScope.launch(context = Dispatchers.IO) {
+            val quantity = product.selectedQuantity - ONE
+            val productDraft = product.copy(selectedQuantity = quantity, selected = quantity > ZERO)
+            saveProductsLocal.saveAll(products = listOf(productDraft))
+        }
     }
 }
