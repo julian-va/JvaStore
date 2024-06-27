@@ -49,6 +49,7 @@ import jva.cloud.jvastore.presentation.viewmodel.StoreViewModel
 @Composable
 fun StoreView(
     navigateToStoreDetail: (String) -> Unit,
+    navigateToCart: () -> Unit,
     storeViewModel: StoreViewModel = hiltViewModel()
 ): Unit {
     val state = storeViewModel.state.value
@@ -58,7 +59,8 @@ fun StoreView(
         topBar = {
             MyTopAppBar(
                 pinnedScrollBehavior = pinnedScrollBehavior,
-                cartQuantity = state.cartQuantity.toString()
+                cartQuantity = state.cartQuantity.toString(),
+                navigateToCart = { navigateToCart() },
             )
         }) { paddingValues ->
 
@@ -81,7 +83,11 @@ fun StoreView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MyTopAppBar(pinnedScrollBehavior: TopAppBarScrollBehavior, cartQuantity: String): Unit {
+private fun MyTopAppBar(
+    pinnedScrollBehavior: TopAppBarScrollBehavior,
+    cartQuantity: String,
+    navigateToCart: () -> Unit
+): Unit {
     TopAppBar(title = {
         Text(text = "JVA STORE")
     },
@@ -95,13 +101,15 @@ private fun MyTopAppBar(pinnedScrollBehavior: TopAppBarScrollBehavior, cartQuant
                 )
             }
             ) {
-                Icon(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(40.dp),
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = ""
-                )
+                IconButton(onClick = { navigateToCart() }) {
+                    Icon(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(40.dp),
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = ""
+                    )
+                }
             }
         })
 }

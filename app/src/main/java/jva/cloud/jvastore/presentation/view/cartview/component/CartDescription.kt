@@ -1,4 +1,4 @@
-package jva.cloud.jvastore.presentation.view.carview.component
+package jva.cloud.jvastore.presentation.view.cartview.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,22 +25,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import jva.cloud.jvastore.domain.model.Product
+import jva.cloud.jvastore.presentation.common.MyAsyncImage
 
 @Composable
-internal fun CartDescription(): Unit {
-    val products = products()
+internal fun CartDescription(
+    products: List<Product>,
+    reprocessImage: (List<String>) -> String,
+    addQuantity: (Product) -> Unit,
+    removeQuantity: (Product) -> Unit,
+    removeAllProductCars: () -> Unit
+): Unit {
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .height(580.dp)
     ) {
         items(items = products, key = { it -> it.id }) { product ->
-            CartCardProduct(product = product)
+            CartCardProduct(
+                product = product,
+                reprocessImage = { reprocessImage(it) },
+                addQuantity = { addQuantity(it) },
+                removeQuantity = { removeQuantity(it) },
+            )
         }
         item {
             Button(modifier = Modifier
                 .padding(start = 120.dp, end = 120.dp)
-                .fillMaxWidth(), onClick = { /*TODO*/ }) {
+                .fillMaxWidth(), onClick = { removeAllProductCars() }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "")
                 Text(text = "Empty cart")
             }
@@ -51,7 +64,12 @@ internal fun CartDescription(): Unit {
 }
 
 @Composable
-private fun CartCardProduct(product: Test) {
+private fun CartCardProduct(
+    product: Product,
+    reprocessImage: (List<String>) -> String,
+    addQuantity: (Product) -> Unit,
+    removeQuantity: (Product) -> Unit
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier
@@ -64,20 +82,18 @@ private fun CartCardProduct(product: Test) {
             modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
+            MyAsyncImage(
+                imagePath = reprocessImage(product.images), modifier = Modifier
                     .height(80.dp)
                     .width(80.dp)
-                    .background(color = Color.Red)
-
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = "TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTRRRRRRRRRRRRR", maxLines = 2)
-                Text(text = product.precio.toString())
-                Text(text = product.precio.toString())
+                Text(text = product.title, maxLines = 2)
+                Text(text = product.price.toString())
+                Text(text = product.selectedQuantity.toString())
                 Box(
                     modifier = Modifier
                         .height(50.dp)
@@ -89,16 +105,16 @@ private fun CartCardProduct(product: Test) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { removeQuantity(product) }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = "",
                             )
                         }
 
-                        Text(text = "5")
+                        Text(text = product.selectedQuantity.toString())
 
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { addQuantity(product) }) {
                             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
                         }
                     }

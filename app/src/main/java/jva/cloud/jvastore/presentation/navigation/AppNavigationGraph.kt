@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import jva.cloud.jvastore.presentation.view.DetailStoreView
 import jva.cloud.jvastore.presentation.view.StoreView
+import jva.cloud.jvastore.presentation.view.cartview.CartView
 
 @Composable
 fun AppNavigationGraph(navController: NavHostController): Unit {
@@ -16,7 +17,7 @@ fun AppNavigationGraph(navController: NavHostController): Unit {
         composable(route = RouterPath.STORE) {
             StoreView(navigateToStoreDetail = { id ->
                 navController.navigateToStoreDetail(id = id)
-            })
+            }, navigateToCart = { navController.navigateToCart() })
         }
         composable(
             route = RouterPath.DETAIL_STORE, arguments = listOf(
@@ -27,7 +28,10 @@ fun AppNavigationGraph(navController: NavHostController): Unit {
             )
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString(RouterOption.DetailParam.ID)
-            DetailStoreView(id = id, navigateToStore = { navController.navigateToStore() })
+            DetailStoreView(id = id, navigateToStore = { navController.popBackStack() })
+        }
+        composable(route = RouterPath.CART) {
+            CartView(navigateToStore = { navController.popBackStack() })
         }
     }
 }

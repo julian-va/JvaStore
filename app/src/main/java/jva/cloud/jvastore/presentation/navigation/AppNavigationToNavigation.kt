@@ -9,3 +9,7 @@ fun NavController.navigateToStore(): Unit {
 fun NavController.navigateToStoreDetail(id: String): Unit {
     this.navigate(route = "${RouterOption.DetailParam.BASE_ROUTE}/$id")
 }
+
+fun NavController.navigateToCart(): Unit {
+    this.navigate(route = RouterPath.CART)
+}
