@@ -1,4 +1,4 @@
-package jva.cloud.jvastore.presentation.view.carview.component
+package jva.cloud.jvastore.presentation.view.cartview.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SubtotalView(): Unit {
+fun SubtotalView(subtotal: Int): Unit {
     Column(modifier = Modifier.fillMaxWidth()) {
         Box(
             modifier = Modifier
@@ -23,7 +23,7 @@ fun SubtotalView(): Unit {
         ) {
             Row {
                 Text(text = "Subtotal", modifier = Modifier.padding(end = 120.dp))
-                Text(text = "2015489", modifier = Modifier.padding(start = 120.dp))
+                Text(text = "$ $subtotal", modifier = Modifier.padding(start = 120.dp))
             }
         }
 

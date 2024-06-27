@@ -1,29 +1,29 @@
-package jva.cloud.jvastore.presentation.view.carview.component
+package jva.cloud.jvastore.presentation.view.cartview.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun MinimumOrderView(text: String, showIcon: Boolean): Unit {
+internal fun MinimumOrderView(
+    modifier: Modifier,
+    text: String,
+    showIcon: Boolean,
+    contentAlignment: Alignment
+): Unit {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(20.dp)
-            .background(color = Color.Gray),
-        contentAlignment = Alignment.Center
+        modifier = modifier,
+        contentAlignment = contentAlignment
 
     ) {
         if (showIcon) MyTextIcon(text = text) else MyTextNotIcon(text = text)
@@ -34,7 +34,7 @@ internal fun MinimumOrderView(text: String, showIcon: Boolean): Unit {
 private fun MyTextNotIcon(text: String) {
     Text(
         textAlign = TextAlign.Center,
-        text = "you need x value to complete the minimum order",
+        text = text,
         maxLines = 2
     )
 }
@@ -42,10 +42,11 @@ private fun MyTextNotIcon(text: String) {
 @Composable
 private fun MyTextIcon(text: String) {
     Row {
-        Icon(imageVector = Icons.Default.DateRange, contentDescription = "")
+        Icon(imageVector = Icons.Default.Done, contentDescription = "")
+        Spacer(modifier = Modifier.padding(5.dp))
         Text(
             textAlign = TextAlign.Center,
-            text = "you need x value to complete the minimum order",
+            text = text,
             maxLines = 2
         )
     }
