@@ -1,4 +1,4 @@
-package jva.cloud.jvastore.presentation.viewmodel
+package jva.cloud.jvastore.presentation.view.detailstore.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.domain.usecase.RetrieveProductFromLocalById
 import jva.cloud.jvastore.domain.usecase.SaveProductsLocal
-import jva.cloud.jvastore.presentation.viewmodel.state.DetailStoreViewModelState
 import jva.cloud.jvastore.util.ConstantApp
 import jva.cloud.jvastore.util.ConstantApp.ZERO
 import jva.cloud.jvastore.util.ConstantApp.ZERO_STR
@@ -29,6 +28,7 @@ class DetailStoreViewModel @Inject constructor(
         if (!state.value.theViewmodelWasAlreadyCalled) {
             viewModelScope.launch(context = Dispatchers.Main) {
                 retrieveProductLocal(id = id)
+                showProgressIndicator(ConstantApp.BOOLEAN_FALSE)
             }
         }
     }
@@ -47,8 +47,11 @@ class DetailStoreViewModel @Inject constructor(
     }
 
     fun changeQuantity(quantity: String) {
+        val quantityDraft =
+            quantity.replace(Regex("[\\s-,.]"), "")
         val quantitySte =
-            if (quantity.isBlank() || ZERO_STR == quantity) ZERO else quantity.trim().toInt()
+            if (quantityDraft.isBlank() || ZERO_STR == quantityDraft) ZERO else quantityDraft.trim()
+                .toInt()
         _state.value = _state.value.copy(selectedQuantity = quantitySte)
     }
 
@@ -62,5 +65,9 @@ class DetailStoreViewModel @Inject constructor(
             _state.value =
                 _state.value.copy(product = retrieveProductFromLocalById.getById(id = productDrafter.id))
         }
+    }
+
+    private fun showProgressIndicator(show: Boolean): Unit {
+        _state.value = _state.value.copy(progressIndicator = show)
     }
 }

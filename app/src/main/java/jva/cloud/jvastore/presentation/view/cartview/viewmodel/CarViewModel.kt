@@ -5,11 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
+import jva.cloud.jvastore.domain.usecase.CalculateQuantityAddedProduct
 import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
-import jva.cloud.jvastore.domain.usecase.SaveProductsLocal
-import jva.cloud.jvastore.util.ConstantApp
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
-import jva.cloud.jvastore.util.ConstantApp.ONE
+import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
 import jva.cloud.jvastore.util.ConstantApp.ZERO
 import jva.cloud.jvastore.util.UtilsApp
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CarViewModel @Inject constructor(
-    private val saveProductsLocal: SaveProductsLocal,
     private val retrieveProductsFromLocal: RetrieveProductsFromLocal,
+    private val calculateQuantityAddedProduct: CalculateQuantityAddedProduct
 ) : ViewModel() {
     private val _state = mutableStateOf(CarViewModelState())
     val state = _state
@@ -33,16 +32,17 @@ class CarViewModel @Inject constructor(
     private suspend fun getAllProducts() {
         retrieveProductsFromLocal.getAllProducts().collect { products ->
             val productsToPay =
-                products.filter { product -> ConstantApp.BOOLEAN_TRUE == product.selected }
+                products.filter { product -> BOOLEAN_TRUE == product.selected }
             if (productsToPay.isNotEmpty()) {
                 _state.value = _state.value.copy(
                     products = productsToPay,
                     totalCartProduct = totalItemsCart(productsTotalItems = productsToPay),
-                    totalCartPay = totalPayCart(productsToPay = productsToPay)
+                    totalCartPay = totalPayCart(productsToPay = productsToPay),
+                    progressIndicator = BOOLEAN_FALSE
                 )
                 return@collect
             }
-            InitialState()
+            initialState()
         }
     }
 
@@ -62,36 +62,30 @@ class CarViewModel @Inject constructor(
 
     fun addQuantity(product: Product) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            val quantity = product.selectedQuantity + ONE
-            val productDraft =
-                product.copy(selectedQuantity = quantity, selected = quantity > ConstantApp.ZERO)
-            saveProductsLocal.saveAll(products = listOf(productDraft))
+            calculateQuantityAddedProduct.addQuantity(product = product)
         }
     }
 
     fun removeQuantity(product: Product) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            val quantity = product.selectedQuantity - ONE
-            val productDraft =
-                product.copy(selectedQuantity = quantity, selected = quantity > ConstantApp.ZERO)
-            saveProductsLocal.saveAll(products = listOf(productDraft))
+            calculateQuantityAddedProduct.removeQuantity(product = product)
         }
     }
 
     fun removeAllProductCars() {
         viewModelScope.launch(context = Dispatchers.IO) {
-            val products = state.value.products.map { product ->
-                product.copy(
-                    selectedQuantity = ZERO,
-                    selected = BOOLEAN_FALSE
-                )
-            }
-            saveProductsLocal.saveAll(products = products)
+            calculateQuantityAddedProduct.amountToZero(products = state.value.products)
         }
     }
 
-    private fun InitialState(): Unit {
+    private fun initialState(): Unit {
         _state.value =
-            state.value.copy(totalCartPay = ZERO, totalCartProduct = ZERO, products = listOf())
+            state.value.copy(
+                totalCartPay = ZERO,
+                totalCartProduct = ZERO,
+                products = listOf(),
+                progressIndicator = BOOLEAN_FALSE
+            )
     }
+
 }
