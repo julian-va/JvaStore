@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -20,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import jva.cloud.jvastore.presentation.common.MyCircularProgressIndicator
+import jva.cloud.jvastore.presentation.common.NotFoundView
 import jva.cloud.jvastore.presentation.view.cartview.component.CartDescription
 import jva.cloud.jvastore.presentation.view.cartview.component.MinimumOrderView
 import jva.cloud.jvastore.presentation.view.cartview.component.MyTopAppBarCarView
@@ -36,6 +35,7 @@ fun CartView(
 ): Unit {
     val pinnedScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val state = carViewModel.state.value
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -46,6 +46,10 @@ fun CartView(
                 pinnedScrollBehavior = pinnedScrollBehavior
             )
         }) { paddingValues ->
+        if (state.progressIndicator) {
+            MyCircularProgressIndicator(modifier = Modifier.padding(paddingValues))
+            return@Scaffold
+        }
         if (state.products.isNotEmpty()) {
             Column(
                 modifier = Modifier.padding(paddingValues),
@@ -79,28 +83,7 @@ fun CartView(
                 SubtotalView(subtotal = state.totalCartPay)
             }
         } else {
-            CartEmpty(modifier = Modifier.padding(paddingValues))
+            NotFoundView(modifier = Modifier.padding(paddingValues))
         }
-
     }
-
 }
-
-@Composable
-private fun CartEmpty(modifier: Modifier) {
-    Icon(
-        imageVector = Icons.Default.ShoppingCart, contentDescription = "", modifier = modifier
-            .fillMaxWidth()
-            .height(600.dp)
-    )
-}
-
-/*@Preview(
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
-    showBackground = true
-)
-@Composable
-private fun Preview(): Unit {
-    CartView(navigateToStore = {})
-}*/

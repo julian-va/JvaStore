@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import jva.cloud.jvastore.presentation.view.DetailStoreView
-import jva.cloud.jvastore.presentation.view.StoreView
 import jva.cloud.jvastore.presentation.view.cartview.CartView
+import jva.cloud.jvastore.presentation.view.detailstore.DetailStoreView
+import jva.cloud.jvastore.presentation.view.storeview.StoreView
 
 @Composable
 fun AppNavigationGraph(navController: NavHostController): Unit {
