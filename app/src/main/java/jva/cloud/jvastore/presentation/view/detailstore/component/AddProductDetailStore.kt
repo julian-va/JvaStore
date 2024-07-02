@@ -22,7 +22,6 @@ internal fun AddProductDetailStore(
     addQuantity: (quantity: String) -> Unit,
     addCar: (product: Product) -> Unit
 ) {
-    
     MyOutlinedTextField(
         fieldName = "Add product",
         text = quantity.ifBlank { STRING_EMPTY },
@@ -34,4 +33,6 @@ internal fun AddProductDetailStore(
         .padding(top = 20.dp), onClick = { addCar(product) }) {
         Text(text = "add product")
     }
+
+
 }

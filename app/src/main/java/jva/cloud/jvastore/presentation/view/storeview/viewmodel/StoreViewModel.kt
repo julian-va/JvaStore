@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jva.cloud.jvastore.domain.model.Category
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.domain.usecase.CalculateQuantityAddedProduct
 import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
@@ -41,9 +42,27 @@ class StoreViewModel @Inject constructor(
                 products = products,
                 rememberList = products,
                 cartQuantity = quantityOfSelectedProducts,
+                categories = retrieveCategories(products = products),
                 progressIndicator = BOOLEAN_FALSE
             )
         }
+    }
+
+    private fun retrieveCategories(products: List<Product>): List<Category> {
+        return products.map { product -> product.category }.toHashSet().toList()
+    }
+
+    fun filterProductsByCategory(searchFilter: String = STRING_EMPTY): Unit {
+        if (searchFilter.isEmpty()) {
+            valueStateSetList(list = state.value.rememberList, saveKey = BOOLEAN_TRUE)
+            dialogState(show = BOOLEAN_FALSE)
+            return
+        }
+
+        val listSearch =
+            state.value.rememberList.filter { product -> searchFilter == product.category.name }
+        valueStateSetList(list = listSearch, saveKey = BOOLEAN_TRUE)
+        dialogState(show = BOOLEAN_FALSE)
     }
 
     fun reprocessImage(listImage: List<String>): String {
@@ -89,5 +108,17 @@ class StoreViewModel @Inject constructor(
         viewModelScope.launch(context = Dispatchers.IO) {
             calculateQuantityAddedProduct.removeQuantity(product = product)
         }
+    }
+
+    fun openDialog(): Unit {
+        dialogState(show = BOOLEAN_TRUE)
+    }
+
+    fun onDialogDismiss(): Unit {
+        dialogState(show = BOOLEAN_FALSE)
+    }
+
+    private fun dialogState(show: Boolean): Unit {
+        _state.value = _state.value.copy(showDialog = show)
     }
 }
