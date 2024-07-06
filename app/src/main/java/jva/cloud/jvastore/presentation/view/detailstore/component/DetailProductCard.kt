@@ -3,6 +3,7 @@ package jva.cloud.jvastore.presentation.view.detailstore.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.presentation.common.MyAsyncImage
@@ -28,7 +30,7 @@ internal fun DetailProductCard(
     addCar: (product: Product) -> Unit,
     modifier: Modifier,
 ): Unit {
-    val dpCustom = (90 - (product.selectedQuantity.toString().length * 4)).dp
+    val dpCustom = (110 - (product.selectedQuantity.toString().length * 4)).dp
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -46,10 +48,12 @@ internal fun DetailProductCard(
         ) {
 
             MyAsyncImage(
-                imagePath = image, modifier = Modifier
+                imagePath = image,
+                modifier = Modifier
                     .height(400.dp)
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 20.dp, end = 10.dp, start = 10.dp)
+                    .padding(top = 10.dp, bottom = 20.dp, end = 10.dp, start = 10.dp),
+                contentScale = ContentScale.Crop
             )
             TextValueCard(textHeader = "product name", text = product.title, isRow = BOOLEAN_FALSE)
 
@@ -64,6 +68,7 @@ internal fun DetailProductCard(
                 product = product,
                 addQuantity = { addQuantity(it) },
                 addCar = { addCar(it) })
+            Spacer(modifier = Modifier.padding(20.dp))
         }
         Row(
             modifier = Modifier.padding(15.dp),

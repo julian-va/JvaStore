@@ -29,7 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Category
 import jva.cloud.jvastore.presentation.common.MyAsyncImage
@@ -84,7 +85,15 @@ private fun CategoryFilter(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
-            item { Text(text = "Filter by category", maxLines = 1, color = Color.Black) }
+            item {
+                Text(
+                    text = "Filter by category",
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             items(categories, key = { category -> category.id }) { category ->
                 CardCategory(
                     category = category,
@@ -112,7 +121,7 @@ private fun CardCategory(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier
             .fillMaxSize()
-            .padding(end = 5.dp, start = 5.dp, top = 5.dp, bottom = 10.dp)
+            .padding(10.dp)
             .clickable { retrieveCategories(category.name) }
     ) {
         Row(
@@ -123,13 +132,17 @@ private fun CardCategory(
                     .height(50.dp)
                     .width(50.dp)
                     .padding(5.dp)
-                    .weight(1f)
+                    .weight(1f),
+                contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = category.name,
                 maxLines = 1,
-                modifier = Modifier.padding(end = 5.dp)
+                modifier = Modifier.padding(end = 5.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.Bold
             )
         }
     }

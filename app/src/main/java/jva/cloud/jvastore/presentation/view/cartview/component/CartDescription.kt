@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.presentation.common.AddAndRemoveComponent
@@ -84,7 +85,7 @@ private fun CartCardProduct(
             MyAsyncImage(
                 imagePath = reprocessImage(product.images), modifier = Modifier
                     .height(80.dp)
-                    .width(80.dp)
+                    .width(80.dp), contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp),

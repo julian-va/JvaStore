@@ -10,14 +10,18 @@ import jva.cloud.jvastore.R
 
 
 @Composable
-fun MyAsyncImage(imagePath: String, modifier: Modifier): Unit {
+fun MyAsyncImage(
+    imagePath: String,
+    modifier: Modifier,
+    contentScale: ContentScale = ContentScale.Crop
+): Unit {
 
     val image = ImageRequest.Builder(LocalContext.current).data(imagePath)
         .error(drawableResId = R.drawable.ic_broken_image).crossfade(2000).build()
 
     AsyncImage(
         model = image,
-        contentScale = ContentScale.Crop,
+        contentScale = contentScale,
         contentDescription = "",
         modifier = modifier
     )
