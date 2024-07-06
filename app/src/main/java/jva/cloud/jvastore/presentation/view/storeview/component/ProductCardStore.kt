@@ -9,6 +9,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.presentation.common.MyAsyncImage
@@ -32,7 +33,7 @@ internal fun ProductCardStore(
             imagePath = image, modifier = Modifier
                 .height(200.dp)
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(12.dp), contentScale = ContentScale.Crop
         )
         TextValueCard(textHeader = "product name", text = product.title)
         TextValueCard(textHeader = "price", text = product.price.toString())

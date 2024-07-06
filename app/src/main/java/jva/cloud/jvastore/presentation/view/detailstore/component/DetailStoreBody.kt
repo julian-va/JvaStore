@@ -14,6 +14,7 @@ internal fun DetailStoreBody(
     addCar: (product: Product) -> Unit,
 ) {
     DetailProductCard(
+        modifier = Modifier,
         quantity = quantity,
         product = product,
         image = reprocessImage(product.images),

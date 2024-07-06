@@ -13,15 +13,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.presentation.common.AddAndRemoveComponent
@@ -50,7 +51,7 @@ internal fun CartDescription(
             )
         }
         item {
-            Button(modifier = Modifier
+            OutlinedButton(modifier = Modifier
                 .padding(start = 120.dp, end = 120.dp)
                 .fillMaxWidth(), onClick = { removeAllProductCars() }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "")
@@ -84,7 +85,7 @@ private fun CartCardProduct(
             MyAsyncImage(
                 imagePath = reprocessImage(product.images), modifier = Modifier
                     .height(80.dp)
-                    .width(80.dp)
+                    .width(80.dp), contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier.padding(start = 10.dp),
