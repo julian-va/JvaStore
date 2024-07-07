@@ -1,5 +1,6 @@
 package jva.cloud.jvastore.presentation.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,21 +27,22 @@ fun TextValueCard(
 ) {
     if (isRow) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                modifier = modifier.padding(2.dp),
+                modifier = Modifier.padding(2.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 text = "$textHeader :",
             )
             Text(
-                modifier = modifier
+                modifier = Modifier
                     .padding(2.dp),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary,
-                softWrap = true,
                 maxLines = if (maxLines > 0) maxLines else Int.MAX_VALUE,
                 text = text,
             )

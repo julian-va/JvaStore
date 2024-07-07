@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SubtotalView(subtotal: Int): Unit {
+fun SubtotalView(subtotal: Int, navigateToInvoiceDetail: () -> Unit): Unit {
     Column(modifier = Modifier.fillMaxWidth()) {
         Box(
             modifier = Modifier
@@ -43,7 +43,7 @@ fun SubtotalView(subtotal: Int): Unit {
 
         Button(modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 30.dp, end = 30.dp), onClick = { /*TODO*/ }) {
+            .padding(start = 30.dp, end = 30.dp), onClick = { navigateToInvoiceDetail() }) {
             Text(text = "pay", fontWeight = FontWeight.Bold)
         }
     }

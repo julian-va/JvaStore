@@ -6,4 +6,5 @@ object RouterPath {
     const val CART = "/cart"
     const val USER = "/user"
     const val USER_INFORMATION = "/user/information"
+    const val INVOICE_DETAIL = "/invoice/detail"
 }

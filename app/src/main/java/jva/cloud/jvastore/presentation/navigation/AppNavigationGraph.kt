@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import jva.cloud.jvastore.presentation.view.cartview.CartView
 import jva.cloud.jvastore.presentation.view.createuserview.CreateUserView
 import jva.cloud.jvastore.presentation.view.detailstore.DetailStoreView
+import jva.cloud.jvastore.presentation.view.invoicedetailview.InvoiceDetailView
 import jva.cloud.jvastore.presentation.view.storeview.StoreView
 import jva.cloud.jvastore.presentation.view.userinformationview.UserInformationView
 
@@ -36,7 +37,8 @@ fun AppNavigationGraph(navController: NavHostController): Unit {
             DetailStoreView(id = id, navigateToStore = { navController.popBackStack() })
         }
         composable(route = RouterPath.CART) {
-            CartView(navigateToStore = { navController.popBackStack() })
+            CartView(navigateToStore = { navController.navigateToStore() },
+                navigateToInvoiceDetail = { navController.navigateToInvoiceDetail() })
         }
         composable(route = RouterPath.USER) {
             CreateUserView(
@@ -46,6 +48,11 @@ fun AppNavigationGraph(navController: NavHostController): Unit {
         composable(route = RouterPath.USER_INFORMATION) {
             UserInformationView(
                 redirectCreateUser = { navController.navigateToUser() },
+                navigateToStore = { navController.navigateToStore() })
+        }
+        composable(route = RouterPath.INVOICE_DETAIL) {
+            InvoiceDetailView(
+                navigateToCart = { navController.navigateToCart() },
                 navigateToStore = { navController.navigateToStore() })
         }
     }
