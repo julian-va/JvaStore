@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jva.cloud.jvastore.data.local.dao.CategoryDao
 import jva.cloud.jvastore.data.local.dao.ProductsDao
+import jva.cloud.jvastore.data.local.dao.UserDao
 import jva.cloud.jvastore.data.local.database.JvaStoreDataBase
 import javax.inject.Singleton
 
@@ -38,5 +39,11 @@ object RoomModule {
     @Provides
     fun provideCategoryDao(dataBae: JvaStoreDataBase): CategoryDao {
         return dataBae.provideCategoryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserDao(dataBae: JvaStoreDataBase): UserDao {
+        return dataBae.provideUserDao()
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.domain.usecase.CalculateQuantityAddedProduct
+import jva.cloud.jvastore.domain.usecase.RetrieveAllUser
 import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CarViewModel @Inject constructor(
     private val retrieveProductsFromLocal: RetrieveProductsFromLocal,
-    private val calculateQuantityAddedProduct: CalculateQuantityAddedProduct
+    private val calculateQuantityAddedProduct: CalculateQuantityAddedProduct,
+    private val retrieveAllUser: RetrieveAllUser
 ) : ViewModel() {
     private val _state = mutableStateOf(CarViewModelState())
     val state = _state
@@ -26,6 +28,7 @@ class CarViewModel @Inject constructor(
     init {
         viewModelScope.launch(context = Dispatchers.IO) {
             getAllProducts()
+            getAllUser()
         }
     }
 
@@ -43,6 +46,14 @@ class CarViewModel @Inject constructor(
                 return@collect
             }
             initialState()
+        }
+    }
+
+    private suspend fun getAllUser() {
+        retrieveAllUser.getAll().collect { users ->
+            if (users.isNotEmpty()) {
+                _state.value = _state.value.copy(address = users.first().address)
+            }
         }
     }
 

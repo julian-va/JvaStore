@@ -20,6 +20,7 @@ import jva.cloud.jvastore.presentation.view.storeview.viewmodel.StoreViewModel
 fun StoreView(
     navigateToStoreDetail: (String) -> Unit,
     navigateToCart: () -> Unit,
+    navigateToUser: () -> Unit,
     storeViewModel: StoreViewModel = hiltViewModel()
 ): Unit {
     val state = storeViewModel.state.value
@@ -45,7 +46,7 @@ fun StoreView(
                     openDialog = { storeViewModel.openDialog() },
                     showDialog = state.showDialog,
                     retrieveCategories = { storeViewModel.filterProductsByCategory(it) },
-                    navigateToCart = { navigateToCart() },
+                    navigateToCart = { navigateToCart() }, navigateToUser = { navigateToUser() }
                 )
             }) { paddingValues ->
 

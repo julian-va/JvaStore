@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +26,7 @@ import jva.cloud.jvastore.presentation.view.cartview.component.SubtotalView
 import jva.cloud.jvastore.presentation.view.cartview.viewmodel.CarViewModel
 import jva.cloud.jvastore.util.ConstantApp
 import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_FALSE
+import jva.cloud.jvastore.util.ConstantApp.MINIMUM_QUANTITY_PRODUCTS
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +44,7 @@ fun CartView(
         topBar = {
             MyTopAppBarCarView(
                 navigateToStore = { navigateToStore() },
-                pinnedScrollBehavior = pinnedScrollBehavior
+                pinnedScrollBehavior = pinnedScrollBehavior, address = state.address
             )
         }) { paddingValues ->
         if (state.progressIndicator) {
@@ -54,15 +55,18 @@ fun CartView(
             Column(
                 modifier = Modifier.padding(paddingValues),
             ) {
-                MinimumOrderView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(30.dp)
-                        .background(color = Color.Gray),
-                    text = "you need x value to complete the minimum order",
-                    showIcon = BOOLEAN_FALSE,
-                    contentAlignment = Alignment.Center
-                )
+                if (state.totalCartProduct < MINIMUM_QUANTITY_PRODUCTS) {
+                    MinimumOrderView(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(30.dp)
+                            .background(color = MaterialTheme.colorScheme.error),
+                        text = "you need $MINIMUM_QUANTITY_PRODUCTS value to complete the minimum order",
+                        showIcon = BOOLEAN_FALSE,
+                        contentAlignment = Alignment.Center
+                    )
+                }
+
 
                 CartDescription(
                     products = state.products,
@@ -74,7 +78,7 @@ fun CartView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(30.dp)
-                        .background(color = Color.LightGray),
+                        .background(color = MaterialTheme.colorScheme.outlineVariant),
                     contentAlignment = Alignment.CenterStart,
                     text = "You have added a total of ${state.totalCartProduct} products",
                     showIcon = ConstantApp.BOOLEAN_TRUE

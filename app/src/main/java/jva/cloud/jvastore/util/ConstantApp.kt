@@ -10,4 +10,5 @@ object ConstantApp {
     const val ZERO: Int = 0
     const val ONE: Int = 1
     const val ZERO_STR: String = "0"
+    const val MINIMUM_QUANTITY_PRODUCTS: Int = 6
 }

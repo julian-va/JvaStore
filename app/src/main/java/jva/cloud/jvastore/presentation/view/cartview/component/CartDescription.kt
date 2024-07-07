@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jva.cloud.jvastore.domain.model.Product
 import jva.cloud.jvastore.presentation.common.AddAndRemoveComponent
@@ -74,8 +76,8 @@ private fun CartCardProduct(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .padding(top = 5.dp, bottom = 10.dp)
+            //.height(150.dp)
+            .padding(10.dp)
 
     ) {
         Row(
@@ -91,9 +93,28 @@ private fun CartCardProduct(
                 modifier = Modifier.padding(start = 10.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = product.title, maxLines = 2)
-                Text(text = product.price.toString())
-                Text(text = product.selectedQuantity.toString())
+                Text(
+                    text = product.title,
+                    modifier = Modifier.padding(3.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2
+                )
+                Text(
+                    text = "quantity: ${product.selectedQuantity}",
+                    modifier = Modifier.padding(3.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = "$ ${product.price * product.selectedQuantity}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(3.dp),
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.Bold,
+                )
                 Box(
                     modifier = Modifier
                         .height(50.dp)

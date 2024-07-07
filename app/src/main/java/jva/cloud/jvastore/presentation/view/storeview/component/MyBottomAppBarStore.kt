@@ -45,7 +45,8 @@ internal fun MyBottomAppBarStore(
     onDismiss: () -> Unit,
     reprocessImage: (List<String>) -> String,
     retrieveCategories: (String) -> Unit,
-    navigateToCart: () -> Unit
+    navigateToCart: () -> Unit,
+    navigateToUser: () -> Unit,
 ): Unit {
 
     MyDialog(showDialog = showDialog, onDismiss = { onDismiss() }) {
@@ -58,7 +59,7 @@ internal fun MyBottomAppBarStore(
         IconButton(modifier = Modifier.weight(1f), onClick = { openDialog() }) {
             Icon(imageVector = Icons.Filled.Menu, contentDescription = "")
         }
-        IconButton(modifier = Modifier.weight(1f), onClick = { /*TODO*/ }) {
+        IconButton(modifier = Modifier.weight(1f), onClick = { navigateToUser() }) {
             Icon(imageVector = Icons.Filled.Person, contentDescription = "")
         }
         IconButton(modifier = Modifier.weight(1f), onClick = { navigateToCart() }) {

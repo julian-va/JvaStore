@@ -13,3 +13,11 @@ fun NavController.navigateToStoreDetail(id: String): Unit {
 fun NavController.navigateToCart(): Unit {
     this.navigate(route = RouterPath.CART)
 }
+
+fun NavController.navigateToUser(): Unit {
+    this.navigate(route = RouterPath.USER)
+}
+
+fun NavController.navigateToUserInformation(): Unit {
+    this.navigate(route = RouterPath.USER_INFORMATION)
+}
