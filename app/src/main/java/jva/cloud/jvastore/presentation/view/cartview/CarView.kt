@@ -32,7 +32,8 @@ import jva.cloud.jvastore.util.ConstantApp.MINIMUM_QUANTITY_PRODUCTS
 @Composable
 fun CartView(
     navigateToStore: () -> Unit,
-    carViewModel: CarViewModel = hiltViewModel()
+    carViewModel: CarViewModel = hiltViewModel(),
+    navigateToInvoiceDetail: () -> Unit
 ): Unit {
     val pinnedScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val state = carViewModel.state.value
@@ -84,7 +85,9 @@ fun CartView(
                     showIcon = ConstantApp.BOOLEAN_TRUE
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
-                SubtotalView(subtotal = state.totalCartPay)
+                SubtotalView(
+                    subtotal = state.totalCartPay,
+                    navigateToInvoiceDetail = { navigateToInvoiceDetail() })
             }
         } else {
             NotFoundView(modifier = Modifier.padding(paddingValues))

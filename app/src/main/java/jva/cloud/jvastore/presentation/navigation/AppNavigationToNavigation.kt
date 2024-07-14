@@ -21,3 +21,7 @@ fun NavController.navigateToUser(): Unit {
 fun NavController.navigateToUserInformation(): Unit {
     this.navigate(route = RouterPath.USER_INFORMATION)
 }
+
+fun NavController.navigateToInvoiceDetail(): Unit {
+    this.navigate(route = RouterPath.INVOICE_DETAIL)
+}

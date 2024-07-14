@@ -9,4 +9,17 @@
     <!--TEXT CREATION USER ERROR-->
     <string name="error">Error</string>
     <string name="error_data">Error you must complete all the data</string>
+    <!--TEXT INVOICE DETAIL-->
+    <string name="your_order">Your order</string>
+    <string name="delivery">Delivery</string>
+    <string name="finalize_order">Finalize order</string>
+    <string name="observation">Observation</string>
+    <string name="delivery_type">Delivery type</string>
+    <string name="payment_method">Payment method</string>
+    <string name="summary">Summary</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="tax">Tax</string>
+    <string name="deliveryCost">Delivery cost</string>
+    <string name="discounts">Discounts</string>
+    <string name="total">Total</string>
 </resources>
