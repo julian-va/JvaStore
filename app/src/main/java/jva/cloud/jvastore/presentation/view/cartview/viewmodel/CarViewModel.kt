@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jva.cloud.jvastore.domain.model.Product
+import jva.cloud.jvastore.domain.model.ProductsAndUsers
+import jva.cloud.jvastore.domain.model.User
 import jva.cloud.jvastore.domain.usecase.CalculateQuantityAddedProduct
 import jva.cloud.jvastore.domain.usecase.RetrieveAllUser
 import jva.cloud.jvastore.domain.usecase.RetrieveProductsFromLocal
@@ -13,6 +15,7 @@ import jva.cloud.jvastore.util.ConstantApp.BOOLEAN_TRUE
 import jva.cloud.jvastore.util.ConstantApp.ZERO
 import jva.cloud.jvastore.util.UtilsApp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,33 +30,39 @@ class CarViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(context = Dispatchers.IO) {
-            getAllProducts()
-            getAllUser()
+            retrieveState()
         }
     }
 
-    private suspend fun getAllProducts() {
-        retrieveProductsFromLocal.getAllProducts().collect { products ->
-            val productsToPay =
-                products.filter { product -> BOOLEAN_TRUE == product.selected }
-            if (productsToPay.isNotEmpty()) {
-                _state.value = _state.value.copy(
-                    products = productsToPay,
-                    totalCartProduct = totalItemsCart(productsTotalItems = productsToPay),
-                    totalCartPay = totalPayCart(productsToPay = productsToPay),
-                    progressIndicator = BOOLEAN_FALSE
-                )
-                return@collect
+    private suspend fun retrieveState() {
+        retrieveProductsFromLocal.getAllProducts()
+            .combine(retrieveAllUser.getAll()) { products, users ->
+                ProductsAndUsers(products = products, users = users)
+            }.collect { productsAndUsers ->
+                getAllProducts(products = productsAndUsers.products)
+                getAllUser(users = productsAndUsers.users)
             }
-            initialState()
-        }
     }
 
-    private suspend fun getAllUser() {
-        retrieveAllUser.getAll().collect { users ->
-            if (users.isNotEmpty()) {
-                _state.value = _state.value.copy(address = users.first().address)
-            }
+    private fun getAllProducts(products: List<Product>) {
+        val productsToPay =
+            products.filter { product -> BOOLEAN_TRUE == product.selected }
+
+        if (productsToPay.isNotEmpty()) {
+            _state.value = _state.value.copy(
+                products = productsToPay,
+                totalCartProduct = totalItemsCart(productsTotalItems = productsToPay),
+                totalCartPay = totalPayCart(productsToPay = productsToPay),
+                progressIndicator = BOOLEAN_FALSE
+            )
+            return
+        }
+        initialState()
+    }
+
+    private fun getAllUser(users: List<User>) {
+        if (users.isNotEmpty()) {
+            _state.value = _state.value.copy(address = users.first().address)
         }
     }
 
