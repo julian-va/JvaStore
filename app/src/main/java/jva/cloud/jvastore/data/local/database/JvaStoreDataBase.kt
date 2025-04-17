@@ -11,7 +11,10 @@ import jva.cloud.jvastore.data.local.entity.ProductsEntity
 import jva.cloud.jvastore.data.local.entity.UserEntity
 import jva.cloud.jvastore.util.DateConverter
 
-@Database(entities = [ProductsEntity::class, CategoryEntity::class, UserEntity::class], version = 1)
+@Database(
+    entities = [ProductsEntity::class, CategoryEntity::class, UserEntity::class],
+    version = 1
+)
 @TypeConverters(value = [DateConverter::class])
 abstract class JvaStoreDataBase : RoomDatabase() {
     abstract fun provideProductsDao(): ProductsDao

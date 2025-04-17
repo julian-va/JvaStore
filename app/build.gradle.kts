@@ -1,18 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 
 android {
     namespace = "jva.cloud.jvastore"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "jva.cloud.jvastore"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -49,6 +50,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    android {
+        defaultConfig {
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments += mapOf(
+                        "room.schemaLocation" to "$projectDir/schemas"
+                    )
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -77,8 +90,8 @@ dependencies {
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Coroutines
@@ -99,6 +112,6 @@ dependencies {
     //ROOM
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 }
