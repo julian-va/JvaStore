@@ -44,7 +44,7 @@ El proyecto sigue el patrón MVVM, utilizando Dagger-Hilt para la inyección de 
 Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request para sugerencias o mejoras.
 
 ## Contacto
-Para dudas o soporte, contacta a: julian@example.com
+Para dudas o soporte, contacta a: julian@example.com 
 
 ---
 
