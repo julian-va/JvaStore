@@ -48,4 +48,4 @@ Para dudas o soporte, contacta a: julian@example.com
 
 ---
 
-¡Gracias por usar JvaStore!
+¡Gracias por usar JvaStore! s
